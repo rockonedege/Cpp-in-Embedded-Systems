@@ -109,7 +109,6 @@ add_executable(
   platform/src/system_stm32f0xx.c
   hal/adc/src/adc_stm32.cpp
   cstdlib_support/retarget.cpp
-  util/src/units.cpp
   ${MAIN_CPP_PATH}/${MAIN_CPP_FILE_NAME}
   )
 

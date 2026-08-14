@@ -79,7 +79,7 @@ int main()
                 float temperature = temperature_celsius.at(pos);
 
                 printf("%d mV, %d Ohm, %d.%d C\r\n",
-                       static_cast<int>(adc_val_voltage.get_mili()),
+                       static_cast<int>(adc_val_voltage.get_milli()),
                        static_cast<int>(thermistor_r.get()),
                        static_cast<int>(temperature),
                        static_cast<int>(

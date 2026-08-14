@@ -8,16 +8,16 @@ template <typename T, typename ST> class unit
     T val_;
 
   public:
-    explicit unit(T val) : val_(val)
+    explicit constexpr unit(T val) : val_(val)
     {
     }
-    [[nodiscard]] T get() const
+    [[nodiscard]] constexpr T get() const
     {
         return val_;
     }
-    [[nodiscard]] T get_mili() const
+    [[nodiscard]] constexpr T get_milli() const
     {
-        return 1e3 * val_;
+        return val_ * static_cast<T>(1000);
     }
 
     constexpr T operator/(const unit &second) const
@@ -38,8 +38,21 @@ template <typename T, typename ST> class unit
 
 using voltage = unit<float, struct the_voltage>;
 using resistance = unit<float, struct the_resistance>;
+using current = unit<float, struct the_current>;
 
-voltage operator""_V(long double volts);
+// Ohm's law: dividing a voltage by a resistance yields a current.
+constexpr current operator/(const voltage &v, const resistance &r)
+{
+    return current(v.get() / r.get());
+}
 
-resistance operator""_Ohm(long double ohms);
-}; // namespace units
+constexpr voltage operator""_V(long double volts)
+{
+    return voltage(static_cast<float>(volts));
+}
+
+constexpr resistance operator""_Ohm(long double ohms)
+{
+    return resistance(static_cast<float>(ohms));
+}
+} // namespace units

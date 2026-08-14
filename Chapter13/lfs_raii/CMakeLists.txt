@@ -112,7 +112,6 @@ add_executable(
   hal/gpio/src/gpio_interrupt_manager.cpp
   hal/adc/src/adc_stm32.cpp
   cstdlib_support/retarget.cpp
-  util/src/units.cpp
   libs/littlefs/lfs.c
   libs/littlefs/lfs_util.c
   app/src/lfs_ramfs.c

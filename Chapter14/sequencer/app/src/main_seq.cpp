@@ -75,6 +75,28 @@ template <typename Task, std::size_t Size> struct sequencer
     static inline std::priority_queue<Task, etl::vector<Task, Size>> pq{};
 };
 
+namespace
+{
+class test
+{
+  public:
+    test(int x) : x_(x)
+    {
+    }
+    void print() const
+    {
+        printf("This is a test, x = %d.\r\n", x_);
+    }
+    void static print_static()
+    {
+        printf("This is a static method in test.\r\n");
+    }
+
+  private:
+    int x_ = 0;
+};
+} // namespace
+
 int main()
 {
     hal::init();
@@ -86,25 +108,6 @@ int main()
 
     using callable_etl = etl::delegate<void()>;
     using task_etl = task<callable_etl>;
-
-    class test
-    {
-      public:
-        test(int x) : x_(x)
-        {
-        }
-        void print() const
-        {
-            printf("This is a test, x = %d.\r\n", x_);
-        }
-        void static print_static()
-        {
-            printf("This is a static method in test.\r\n");
-        }
-
-      private:
-        int x_ = 0;
-    };
 
     test test_1(42);
 
