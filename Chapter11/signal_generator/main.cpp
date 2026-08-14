@@ -1,21 +1,25 @@
 #include <array>
 #include <cmath>
 #include <fstream>
+#include <type_traits>
 
 template <typename T, std::size_t N> struct signal : public std::array<T, N>
 {
-    constexpr signal()
+    static_assert(std::is_floating_point_v<T>,
+                  "signal requires a floating-point element type");
+
+    constexpr signal() : std::array<T, N>{}
     {
     }
 
     constexpr signal(T begin, T end)
     {
         static_assert(N > 1, "N must be bigger than 1");
-        float step = (end - begin) / (N - 1);
+        const T step = (end - begin) / static_cast<T>(N - 1);
 
         for(std::size_t i = 0; i < N; i++)
         {
-            this->at(i) = begin + i * step;
+            this->at(i) = begin + static_cast<T>(i) * step;
         }
     }
 
