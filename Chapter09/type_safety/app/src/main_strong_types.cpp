@@ -6,6 +6,7 @@
 #include <hal.hpp>
 #include <uart_stm32.hpp>
 
+#include <cassert>
 #include <cstring>
 #include <retarget.hpp>
 
@@ -26,7 +27,7 @@ class time
     explicit time(uint16_t time_in_ms) : time_in_ms_(time_in_ms)
     {
     }
-    uint16_t &get_ms()
+    uint16_t get_ms() const
     {
         return time_in_ms_;
     }
@@ -34,7 +35,8 @@ class time
 
 time operator""_ms(unsigned long long t)
 {
-    return time(t);
+    assert(t <= UINT16_MAX);
+    return time(static_cast<uint16_t>(t));
 }
 
 class conn_l
@@ -43,10 +45,10 @@ class conn_l
     uint16_t val_;
 
   public:
-    explicit conn_l(time t) : val_(t.get_ms() / 0.625f)
+    explicit conn_l(time t) : val_(static_cast<uint16_t>(t.get_ms() / 0.625f))
     {
     }
-    uint16_t &get()
+    uint16_t get() const
     {
         return val_;
     }
@@ -58,10 +60,10 @@ class conn_p
     uint16_t val_;
 
   public:
-    explicit conn_p(time t) : val_(t.get_ms() / 1.25f)
+    explicit conn_p(time t) : val_(static_cast<uint16_t>(t.get_ms() / 1.25f))
     {
     }
-    uint16_t &get()
+    uint16_t get() const
     {
         return val_;
     }
@@ -88,7 +90,7 @@ tBleStatus aci_gap_create_connection_wrapper(
 
     return true;
 }
-}; // namespace
+} // namespace
 
 int main()
 {
