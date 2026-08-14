@@ -11,79 +11,100 @@
 
 #include <retarget.hpp>
 
-enum class ble_state {
+enum class ble_state
+{
     idle,
     advertising,
     connected
 };
 
-enum class ble_event {
+enum class ble_event
+{
     ble_button_pressed,
     connection_request,
     timer_expired
 };
 
-class ble_fsm {
-public:
-    void handle_event(ble_event event) {
-        switch (current_state_) {
-            case ble_state::idle:
-                if (event == ble_event::ble_button_pressed) {
-                    start_advertising();
-                    current_state_ = ble_state::advertising;
-                }
-                break;
+class ble_fsm
+{
+  public:
+    void handle_event(ble_event event)
+    {
+        switch(current_state_)
+        {
+        case ble_state::idle:
+            if(event == ble_event::ble_button_pressed)
+            {
+                start_advertising();
+                current_state_ = ble_state::advertising;
+            }
+            break;
 
-            case ble_state::advertising:
-                if (event == ble_event::connection_request) {
-                    current_state_ = ble_state::connected;
-                } else if (event == ble_event::timer_expired) {
-                    stop_advertising();
-                    current_state_ = ble_state::idle;
-                }
-                break;
+        case ble_state::advertising:
+            if(event == ble_event::connection_request)
+            {
+                current_state_ = ble_state::connected;
+            }
+            else if(event == ble_event::timer_expired)
+            {
+                stop_advertising();
+                current_state_ = ble_state::idle;
+            }
+            break;
 
-            case ble_state::connected:
-                if (event == ble_event::ble_button_pressed) {
-                    disconnect();
-                    current_state_ = ble_state::idle;
-                }
-                break;
-            default:
-                break;
+        case ble_state::connected:
+            if(event == ble_event::ble_button_pressed)
+            {
+                disconnect();
+                current_state_ = ble_state::idle;
+            }
+            break;
+        default:
+            break;
         }
     }
 
-    ble_state get_state() const {
+    ble_state get_state() const
+    {
         return current_state_;
     }
 
-private:
+  private:
     ble_state current_state_ = ble_state::idle;
 
-    void start_advertising() {
+    void start_advertising()
+    {
         printf("Action: start_advertising()\n");
     }
 
-    void stop_advertising() {
+    void stop_advertising()
+    {
         printf("Action: stop_advertising()\n");
     }
 
-    void disconnect() {
+    void disconnect()
+    {
         printf("Action: disconnect()\n");
     }
 };
 
-namespace {
-const char* state_to_string(ble_state state) {
-    switch (state) {
-        case ble_state::idle:        return "idle";
-        case ble_state::advertising: return "advertising";
-        case ble_state::connected:   return "connected";
-        default:                     return "unknown";
+namespace
+{
+const char *state_to_string(ble_state state)
+{
+    switch(state)
+    {
+    case ble_state::idle:
+        return "idle";
+    case ble_state::advertising:
+        return "advertising";
+    case ble_state::connected:
+        return "connected";
+    default:
+        return "unknown";
     }
 }
-}
+} // namespace
 
 int main()
 {
@@ -96,9 +117,8 @@ int main()
 
     ble_fsm my_ble_fsm;
 
-    const auto print_current_state = [&]() {
-        printf("Current State: %s\n", state_to_string(my_ble_fsm.get_state()));
-    };
+    const auto print_current_state = [&]()
+    { printf("Current State: %s\n", state_to_string(my_ble_fsm.get_state())); };
 
     print_current_state();
 
@@ -110,7 +130,6 @@ int main()
 
     my_ble_fsm.handle_event(ble_event::ble_button_pressed);
     print_current_state();
-
 
     while(true)
     {

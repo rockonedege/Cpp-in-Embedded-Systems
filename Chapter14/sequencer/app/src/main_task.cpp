@@ -13,18 +13,22 @@
 
 #include "etl/delegate.h"
 
-template<typename CallableHolder>
-class task {
-public:
+template <typename CallableHolder> class task
+{
+  public:
     constexpr static std::uint8_t c_prio_default = 250;
     constexpr static std::uint8_t c_prio_max = 255;
     constexpr static std::uint8_t c_prio_min = 0;
 
-    task(CallableHolder the_task, std::uint8_t prio = c_prio_default) : 
-                    the_task_(the_task), priority_(prio) {}
+    task(CallableHolder the_task, std::uint8_t prio = c_prio_default)
+        : the_task_(the_task), priority_(prio)
+    {
+    }
 
-    void execute() {
-        if(the_task_) {
+    void execute()
+    {
+        if(the_task_)
+        {
             the_task_();
         }
     }
@@ -34,7 +38,7 @@ public:
         return priority_ < rhs.priority_;
     }
 
-private:
+  private:
     CallableHolder the_task_;
     std::uint8_t priority_ = c_prio_default;
 };
@@ -50,38 +54,42 @@ int main()
 
     using callable_etl = etl::delegate<void()>;
     using callable_holder = callable_etl;
-    //using callable_holder = std::function<void()>;
+    // using callable_holder = std::function<void()>;
 
-    auto fun_a = []() {
-        printf("High priority task!\r\n");
-    };
+    auto fun_a = []() { printf("High priority task!\r\n"); };
     task<callable_holder> task_a(fun_a, 255);
 
-    auto fun_b = []() {
-        printf("Low priority task!\r\n");
-    };
+    auto fun_b = []() { printf("Low priority task!\r\n"); };
     task<callable_holder> task_b(fun_b, 20);
 
-    if(task_a < task_b) {
+    if(task_a < task_b)
+    {
         task_b.execute();
-    } 
-    else {
+    }
+    else
+    {
         task_a.execute();
     }
 
     using callable_etl = etl::delegate<void()>;
     using task_etl = task<callable_etl>;
 
-    class test {
-    public:
-        test(int x) : x_(x) {}
-        void print() const {
+    class test
+    {
+      public:
+        test(int x) : x_(x)
+        {
+        }
+        void print() const
+        {
             printf("This is a test, x = %d.\r\n", x_);
         }
-        void static print_static() {
+        void static print_static()
+        {
             printf("This is a static method in test.\r\n");
         }
-    private:
+
+      private:
         int x_ = 0;
     };
 
@@ -93,9 +101,7 @@ int main()
     task_etl task_static_fun(callable_etl::create<test::print_static>());
     task_static_fun.execute();
 
-    task_etl task_lambda([](){
-        printf("This is non capturing lambda!\r\n");
-    });
+    task_etl task_lambda([]() { printf("This is non capturing lambda!\r\n"); });
     task_lambda.execute();
 
     while(true)

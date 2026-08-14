@@ -10,18 +10,23 @@
 
 #include <retarget.hpp>
 
-struct sensor {
-    struct data {
+struct sensor
+{
+    struct data
+    {
         int x;
         int y;
     };
     static inline bool ret_val = true;
-    static std::optional<data> get_data() {
+    static std::optional<data> get_data()
+    {
         ret_val = !ret_val;
-        if(ret_val) {
+        if(ret_val)
+        {
             return data{4, 5};
-        } 
-        else {
+        }
+        else
+        {
             return std::nullopt;
         }
     }
@@ -38,14 +43,17 @@ int main()
 
     printf("std::optional example\r\n");
 
-    const auto get_data_from_main = [] () {
-      auto result = sensor::get_data();
-      if(result) {
-          printf("x = %d, y = %d\r\n", (*result).x, (*result).y);
-      } 
-      else {
-          printf("No data!\r\n");
-      }
+    const auto get_data_from_main = []()
+    {
+        auto result = sensor::get_data();
+        if(result)
+        {
+            printf("x = %d, y = %d\r\n", (*result).x, (*result).y);
+        }
+        else
+        {
+            printf("No data!\r\n");
+        }
     };
 
     get_data_from_main();
@@ -55,4 +63,3 @@ int main()
     {
     }
 }
- 

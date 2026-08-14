@@ -1,8 +1,7 @@
 #include <uart_stm32.hpp>
 
 template <typename HalUart>
-hal::uart_stm32<HalUart>::uart_stm32(USART_TypeDef *inst)
-    : instance_(inst)
+hal::uart_stm32<HalUart>::uart_stm32(USART_TypeDef *inst) : instance_(inst)
 {
 }
 
@@ -25,10 +24,10 @@ void hal::uart_stm32<HalUart>::init(std::uint32_t baudrate)
 }
 
 template <typename HalUart>
-void hal::uart_stm32<HalUart>::write(std::span<const char> data) 
+void hal::uart_stm32<HalUart>::write(std::span<const char> data)
 {
     // we must cast away costness due to ST HAL's API
-    char * data_ptr = const_cast<char *>(data.data());
-    HalUart::transmit(&huart_, reinterpret_cast<uint8_t *>(data_ptr), data.size(),
-                      HAL_MAX_DELAY);
+    char *data_ptr = const_cast<char *>(data.data());
+    HalUart::transmit(&huart_, reinterpret_cast<uint8_t *>(data_ptr),
+                      data.size(), HAL_MAX_DELAY);
 }

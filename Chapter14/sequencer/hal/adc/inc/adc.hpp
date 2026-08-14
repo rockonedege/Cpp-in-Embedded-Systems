@@ -6,13 +6,15 @@
 
 namespace hal
 {
-    class adc {
-    public:
-        enum class error {
-            timeout
-        };
-
-        virtual void init() = 0;
-        virtual std::expected<units::voltage, adc::error> get_reading() = 0;
+class adc
+{
+  public:
+    enum class error
+    {
+        timeout
     };
+
+    virtual void init() = 0;
+    virtual std::expected<units::voltage, adc::error> get_reading() = 0;
 };
+}; // namespace hal

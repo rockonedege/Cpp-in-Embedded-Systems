@@ -6,24 +6,28 @@
 #include <hal.hpp>
 #include <uart_stm32.hpp>
 
-#include <retarget.hpp>
 #include <cstring>
+#include <retarget.hpp>
 
-#include <type_traits>
 #include <bit>
+#include <type_traits>
 
-namespace {
+namespace
+{
 
-struct my_struct {
+struct my_struct
+{
     int a;
     char c;
 };
 
-void print_my_struct (const my_struct & str) {
+void print_my_struct(const my_struct &str)
+{
     printf("a = %d, c = %c\r\n", str.a, str.c);
 }
 
-void process_data(const char * data) {
+void process_data(const char *data)
+{
     const auto *pstr = reinterpret_cast<const my_struct *>(data);
 
     printf("%s\r\n", __func__);
@@ -31,7 +35,8 @@ void process_data(const char * data) {
     print_my_struct(pstr[1]);
 }
 
-void process_data_memcpy(const char * data) {
+void process_data_memcpy(const char *data)
+{
     my_struct my_structs[2];
     std::memcpy(my_structs, data, sizeof(my_structs));
 
@@ -39,7 +44,7 @@ void process_data_memcpy(const char * data) {
     print_my_struct(my_structs[0]);
     print_my_struct(my_structs[1]);
 }
-};
+}; // namespace
 
 int main()
 {
@@ -51,12 +56,14 @@ int main()
     retarget::set_stdio_uart(&uart);
 
     int i = 42;
-    auto * i_ptr = reinterpret_cast<char*>(&i);
+    auto *i_ptr = reinterpret_cast<char *>(&i);
 
-    if(i_ptr[0]==42) {
+    if(i_ptr[0] == 42)
+    {
         printf("Little endian!\r\n");
-    } 
-    else {
+    }
+    else
+    {
         printf("Big endian!\r\n");
     }
 

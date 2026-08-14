@@ -1,26 +1,20 @@
-#include <cstdio> 
+#include <cstdio>
 
-  
+int main()
+{
+    int a = 42;
 
-int main() { 
+    int &a_ref = a;
 
-    int a = 42;  
+    const int &a_const_ref = a;
 
-    int& a_ref = a; 
+    printf("a = %d\r\n", a);
 
-    const int& a_const_ref = a; 
+    a_ref = 16;
 
+    printf("a = %d\r\n", a);
 
-    printf("a = %d\r\n", a); 
+    // a_const_ref = 16; compiler error
 
-  
-    a_ref = 16; 
-
-    printf("a = %d\r\n", a); 
-
-
-    // a_const_ref = 16; compiler error 
-
-    return 0;  
-
-} 
+    return 0;
+}

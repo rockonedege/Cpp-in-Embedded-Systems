@@ -63,35 +63,36 @@ const struct lfs_config lfs_ramfs_cfg = {
     .block_cycles = LFS_BLOCK_CYCLES,
 };
 
-struct lfs_config * get_ramfs_lfs_config() {
+struct lfs_config *get_ramfs_lfs_config()
+{
     return &lfs_ramfs_cfg;
 }
 
 static int lfs_ramfs_read(const struct lfs_config *c, lfs_block_t block,
                           lfs_off_t off, void *buffer, lfs_size_t size)
 {
-        assert(buffer != NULL);
-        memcpy(buffer, mem + (block * c->block_size) + off, size);
-        return 0;
+    assert(buffer != NULL);
+    memcpy(buffer, mem + (block * c->block_size) + off, size);
+    return 0;
 }
 
 static int lfs_ramfs_prog(const struct lfs_config *c, lfs_block_t block,
                           lfs_off_t off, const void *buffer, lfs_size_t size)
 {
-        assert(buffer != NULL);
-        memcpy(mem + (block * c->block_size) + off, buffer, size);
-        return LFS_ERR_OK;
+    assert(buffer != NULL);
+    memcpy(mem + (block * c->block_size) + off, buffer, size);
+    return LFS_ERR_OK;
 }
 
 static int lfs_ramfs_erase(const struct lfs_config *c, lfs_block_t block)
 {
-        (void)c;
-        (void)block;
-        return LFS_ERR_OK;
+    (void)c;
+    (void)block;
+    return LFS_ERR_OK;
 }
 
 static int lfs_ramfs_sync(const struct lfs_config *c)
 {
-        (void)c;
-        return LFS_ERR_OK;
+    (void)c;
+    return LFS_ERR_OK;
 }

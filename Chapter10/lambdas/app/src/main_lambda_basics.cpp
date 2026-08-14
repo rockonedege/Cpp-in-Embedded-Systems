@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <array>
 
-
 int main()
 {
     hal::init();
@@ -20,12 +19,14 @@ int main()
     uart.init();
 
     retarget::set_stdio_uart(&uart);
-    
+
     std::array<int, 4> arr{5, 3, 4, 1};
 
-    const auto print_arr = [&arr](const char* message) {
+    const auto print_arr = [&arr](const char *message)
+    {
         printf("%s\r\n", message);
-        for(auto elem : arr) {
+        for(auto elem : arr)
+        {
             printf("%d, ", elem);
         }
         printf("\r\n");
@@ -33,15 +34,12 @@ int main()
 
     print_arr("Unsorted array:");
 
-    std::sort(arr.begin(), arr.end(), [](int a, int b) {
-       return a < b;});
+    std::sort(arr.begin(), arr.end(), [](int a, int b) { return a < b; });
     print_arr("Sorted in ascending order:");
 
-
-    std::sort(arr.begin(), arr.end(), [](int a, int b) {
-       return a > b;});
+    std::sort(arr.begin(), arr.end(), [](int a, int b) { return a > b; });
     print_arr("Sorted in descending order:");
-    
+
     while(true)
     {
     }

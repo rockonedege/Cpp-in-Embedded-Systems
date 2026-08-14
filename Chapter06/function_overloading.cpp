@@ -1,17 +1,19 @@
-#include <cstdio> 
+#include <cstdio>
 
-void print(int a) { 
-    printf("Int %d\r\n", a); 
-} 
+void print(int a)
+{
+    printf("Int %d\r\n", a);
+}
 
-void print(float a) { 
-    printf("Float %2.f\r\n", a); 
-} 
+void print(float a)
+{
+    printf("Float %2.f\r\n", a);
+}
 
-int main() { 
+int main()
+{
+    print(2);
+    print(2.f);
 
-    print(2); 
-    print(2.f); 
-
-    return 0; 
-} 
+    return 0;
+}

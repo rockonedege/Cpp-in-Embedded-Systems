@@ -8,60 +8,75 @@
 
 #include <retarget.hpp>
 
-struct read_access{};
-struct write_access{};
-struct read_write_access : read_access, write_access {};
+struct read_access
+{
+};
+struct write_access
+{
+};
+struct read_write_access : read_access, write_access
+{
+};
 
-template<typename BitField, typename Reg, typename T>
-concept BitFieldConcept = 
+template <typename BitField, typename Reg, typename T>
+concept BitFieldConcept =
     std::is_same_v<Reg, typename BitField::reg> &&
     std::is_enum_v<typename BitField::value> &&
     std::is_same_v<std::underlying_type_t<typename BitField::value>, T>;
 
-
-template<std::uintptr_t Address, typename Access = read_write_access, typename T = std::uint32_t>
-struct reg {
-
+template <std::uintptr_t Address, typename Access = read_write_access,
+          typename T = std::uint32_t>
+struct reg
+{
     using RegType = T;
-    using ThisReg = reg<Address, Access, T>; // Type alias for the current instantiation
+    using ThisReg =
+        reg<Address, Access, T>; // Type alias for the current instantiation
 
-    template<typename BitField>
-    requires BitFieldConcept<BitField, ThisReg, T> // Apply the concept
-    static void set(BitField::value bits_val) {
+    template <typename BitField>
+        requires BitFieldConcept<BitField, ThisReg, T> // Apply the concept
+    static void set(BitField::value bits_val)
+    {
         auto reg_value = read();
-        reg_value &= ~BitField::c_mask; 
-        reg_value |= (static_cast<T>(bits_val) << BitField::c_position) & BitField::c_mask;
+        reg_value &= ~BitField::c_mask;
+        reg_value |= (static_cast<T>(bits_val) << BitField::c_position) &
+                     BitField::c_mask;
         write(reg_value);
     }
 
     template <typename Access_ = Access>
-    static std::enable_if_t<std::is_base_of_v<read_access, Access_>, T> read() {
-        return *reinterpret_cast<volatile T*>(Address);
+    static std::enable_if_t<std::is_base_of_v<read_access, Access_>, T> read()
+    {
+        return *reinterpret_cast<volatile T *>(Address);
     }
-private:
+
+  private:
     template <typename Access_ = Access>
-    static std::enable_if_t<std::is_base_of_v<write_access, Access_>, void> write(T val) {
-        *reinterpret_cast<volatile T*>(Address) = val;
+    static std::enable_if_t<std::is_base_of_v<write_access, Access_>, void>
+    write(T val)
+    {
+        *reinterpret_cast<volatile T *>(Address) = val;
     }
 };
 
 using rcc = reg<0x40021000>;
 
-struct hsion {
+struct hsion
+{
     using reg = rcc;
     using T = reg::RegType;
 
     static constexpr T c_position = 0U;
     static constexpr T c_mask = (1U << c_position);
 
-    enum class value : T {
+    enum class value : T
+    {
         disable = 0U,
-        enable  = 1U,
+        enable = 1U,
     };
 };
 
-template<auto Bits>
-struct hsi_trim {
+template <auto Bits> struct hsi_trim
+{
     using reg = rcc;
     using T = reg::RegType;
 
@@ -72,7 +87,8 @@ struct hsi_trim {
 
     static_assert(Bits <= 0x1F);
 
-    enum class value : T {
+    enum class value : T
+    {
         val = Bits
     };
 };
@@ -85,12 +101,13 @@ int main()
     uart.init();
 
     retarget::set_stdio_uart(&uart);
-    
+
     printf("Hello world\r\n");
 
-    auto const print_reg = [](volatile uint32_t * reg) {
+    auto const print_reg = [](volatile uint32_t *reg)
+    {
         printf("========================\r\n");
-        printf("Reg address = %p\r\n", reinterpret_cast<volatile void*>(reg));
+        printf("Reg address = %p\r\n", reinterpret_cast<volatile void *>(reg));
         printf("Reg value   = 0x%08lX\r\n", *reg);
     };
 

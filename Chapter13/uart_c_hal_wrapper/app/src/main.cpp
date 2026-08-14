@@ -17,9 +17,9 @@ int main()
     uart.init();
 
     retarget::set_stdio_uart(&uart);
-    
+
     printf("Hello world\r\n");
-    
+
     while(true)
     {
     }

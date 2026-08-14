@@ -3,10 +3,10 @@
 
 #include <stm32f072xb.h>
 
-#include <hal.hpp>
-#include <units.hpp>
-#include <uart_stm32.hpp>
 #include <adc_stm32.hpp>
+#include <hal.hpp>
+#include <uart_stm32.hpp>
+#include <units.hpp>
 
 #include <retarget.hpp>
 #include <signal.hpp>
@@ -14,16 +14,19 @@
 #include <algorithm>
 #include <array>
 
-namespace {
-    struct voltage_divider {
-        units::resistance r2; 
-        units::voltage vcc;
+namespace
+{
+struct voltage_divider
+{
+    units::resistance r2;
+    units::voltage vcc;
 
-        units::resistance get_r1(units::voltage vadc) {
-            return r2 * (vcc/vadc - 1);
-        }
-    };
+    units::resistance get_r1(units::voltage vadc)
+    {
+        return r2 * (vcc / vadc - 1);
+    }
 };
+}; // namespace
 
 int main()
 {
@@ -48,37 +51,39 @@ int main()
 
     constexpr signal<float, c_lut_points> resistance(1e3, 10e3);
 
-    constexpr auto temperature_k = 1 / (A +
-                                        B * signal(resistance, [](float x)
-                                                 { return std::log(x); }) +
-                                        C * signal(resistance, [](float x)
-                                                 { return std::pow(std::log(x), 2); }) +
-                                        D * signal(resistance, [](float x)
-                                                 { return std::pow(std::log(x), 3); }));
+    constexpr auto temperature_k =
+        1 / (A + B * signal(resistance, [](float x) { return std::log(x); }) +
+             C * signal(resistance,
+                        [](float x) { return std::pow(std::log(x), 2); }) +
+             D * signal(resistance,
+                        [](float x) { return std::pow(std::log(x), 3); }));
 
     constexpr auto temperature_celsius = temperature_k - 273.15;
 
     voltage_divider divider{10e3_Ohm, 3.3_V};
-    
+
     while(true)
     {
         auto adc_val = adc.get_reading();
-        if(adc_val) {
+        if(adc_val)
+        {
             auto adc_val_voltage = *adc_val;
             auto thermistor_r = divider.get_r1(adc_val_voltage);
 
-            auto it = std::lower_bound(resistance.begin(), resistance.end(), thermistor_r.get());
-            
-            if(it != resistance.end()) {
+            auto it = std::lower_bound(resistance.begin(), resistance.end(),
+                                       thermistor_r.get());
 
-              std::size_t pos = std::distance(resistance.begin(), it);
-              float temperature = temperature_celsius.at(pos);
+            if(it != resistance.end())
+            {
+                std::size_t pos = std::distance(resistance.begin(), it);
+                float temperature = temperature_celsius.at(pos);
 
-              printf("%d mV, %d Ohm, %d.%d C\r\n", static_cast<int>(adc_val_voltage.get_mili()),
-                                        static_cast<int>(thermistor_r.get()),
-                                        static_cast<int>(temperature),
-                                        static_cast<int>(10*(temperature-std::floor(temperature)))
-                                        ); 
+                printf("%d mV, %d Ohm, %d.%d C\r\n",
+                       static_cast<int>(adc_val_voltage.get_mili()),
+                       static_cast<int>(thermistor_r.get()),
+                       static_cast<int>(temperature),
+                       static_cast<int>(
+                           10 * (temperature - std::floor(temperature))));
             }
         }
         hal::time::delay_ms(200);

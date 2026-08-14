@@ -22,14 +22,12 @@ int main()
 
     retarget::set_stdio_uart(&uart);
 
-    const hal::gpio_stm32<hal::port_a> button1(hal::pin::p4, [](){
-        printf("Button1 pressed!\r\n");
-    });
+    const hal::gpio_stm32<hal::port_a> button1(
+        hal::pin::p4, []() { printf("Button1 pressed!\r\n"); });
 
-    const hal::gpio_stm32<hal::port_a> button2(hal::pin::p5, [](){
-        printf("Button2 pressed!\r\n");
-    });
-    
+    const hal::gpio_stm32<hal::port_a> button2(
+        hal::pin::p5, []() { printf("Button2 pressed!\r\n"); });
+
     while(true)
     {
     }

@@ -1,27 +1,29 @@
-#include <cstdio> 
-#include <vector> 
-#include <array> 
-#include <algorithm> 
-#include <numeric> 
+#include <algorithm>
+#include <array>
+#include <cstdio>
+#include <numeric>
+#include <vector>
 
-void print_container(const auto& container) { 
+void print_container(const auto &container)
+{
+    for(auto &elem : container)
+    {
+        printf("%d ", elem);
+    }
+    printf("\r\n");
+}
 
-    for(auto& elem: container) { 
-       printf("%d ", elem);  
-    } 
-    printf("\r\n");  
-} 
+int main()
+{
+    std::array<int, 10> src{0};
+    std::array<int, 10> dst{0};
 
-int main() { 
+    std::iota(src.begin(), src.end(), 0);
+    std::copy_if(src.begin(), src.end(), dst.begin(),
+                 [](int x) { return x > 3; });
 
-    std::array<int, 10> src{0}; 
-    std::array<int, 10> dst{0}; 
+    print_container(src);
+    print_container(dst);
 
-    std::iota(src.begin(), src.end(), 0); 
-    std::copy_if(src.begin(), src.end(), dst.begin(),[] (int x) {return x > 3;}); 
-
-    print_container(src); 
-    print_container(dst); 
-
-    return 0; 
-} 
+    return 0;
+}

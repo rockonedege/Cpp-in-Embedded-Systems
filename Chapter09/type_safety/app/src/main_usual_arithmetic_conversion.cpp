@@ -6,17 +6,19 @@
 #include <hal.hpp>
 #include <uart_stm32.hpp>
 
-#include <retarget.hpp>
 #include <cstring>
+#include <retarget.hpp>
 
 #include <type_traits>
 
-struct my_struct {
+struct my_struct
+{
     char c;
     int a;
 };
 
-void print_my_struct (const my_struct & str) {
+void print_my_struct(const my_struct &str)
+{
     printf("c = %d, a = %d\r\n", str.c, str.a);
 }
 
@@ -46,34 +48,31 @@ int main()
     print_my_struct(str);
     print_my_struct(*pstr);
 #endif
-    struct bitfield{ 
+    struct bitfield
+    {
+        long long a : 31;
+    };
 
-        long long a:31;  
+    bitfield b{4};
 
-    }; 
+    int c = 1;
 
-    bitfield b {4}; 
+    auto res1 = b.a + c;
 
-    int c = 1; 
+    static_assert(sizeof(int) == 4);
 
-    auto res1 = b.a + c;    
+    static_assert(sizeof(long long) == 8);
 
-    static_assert(sizeof(int) == 4); 
+    static_assert(std::is_same_v<int, decltype(res1)>);
 
-    static_assert(sizeof(long long) == 8); 
+    long e = 5;
 
-    static_assert(std::is_same_v<int, decltype(res1)>);  
+    auto res2 = e - b.a;
 
-  
-
-    long e = 5;  
-
-    auto res2 = e - b.a;  
-
-    static_assert(std::is_same_v<long, decltype(res2)>);  
+    static_assert(std::is_same_v<long, decltype(res2)>);
 
     printf("res2 = %ld\r\n", res2);
-    
+
     while(true)
     {
     }

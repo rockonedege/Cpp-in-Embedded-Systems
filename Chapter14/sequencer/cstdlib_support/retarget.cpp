@@ -6,7 +6,7 @@
 
 #include <span>
 
-namespace 
+namespace
 {
 hal::uart *uart_stdio;
 };
@@ -16,7 +16,7 @@ void retarget::set_stdio_uart(hal::uart *uart)
     uart_stdio = uart;
 
     /* Disable I/O buffering for STDOUT stream, so that
-    * chars are sent out as soon as they are printed. */
+     * chars are sent out as soon as they are printed. */
     setvbuf(stdout, NULL, _IONBF, 0);
 }
 
@@ -24,7 +24,7 @@ void retarget::set_stdio_uart(hal::uart *uart)
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
-extern "C" int _write(int fd, char * ptr, int len)
+extern "C" int _write(int fd, char *ptr, int len)
 {
     if(fd == STDOUT_FILENO || fd == STDERR_FILENO)
     {
@@ -46,21 +46,21 @@ extern "C" int _isatty(int fd)
 
 extern "C" int _close(int fd)
 {
-        if(fd >= STDIN_FILENO && fd <= STDERR_FILENO)
-                return 0;
+    if(fd >= STDIN_FILENO && fd <= STDERR_FILENO)
+        return 0;
 
-        errno = EBADF;
-        return -1;
+    errno = EBADF;
+    return -1;
 }
 
 extern "C" int _lseek(int fd, int ptr, int dir)
 {
-        (void)fd;
-        (void)ptr;
-        (void)dir;
+    (void)fd;
+    (void)ptr;
+    (void)dir;
 
-        errno = EBADF;
-        return -1;
+    errno = EBADF;
+    return -1;
 }
 
 extern "C" int _read(int fd, char *ptr, int len)
@@ -70,12 +70,12 @@ extern "C" int _read(int fd, char *ptr, int len)
 
 int _fstat(int fd, struct stat *st)
 {
-        if(fd >= STDIN_FILENO && fd <= STDERR_FILENO)
-        {
-                st->st_mode = S_IFCHR;
-                return 0;
-        }
-
-        errno = EBADF;
+    if(fd >= STDIN_FILENO && fd <= STDERR_FILENO)
+    {
+        st->st_mode = S_IFCHR;
         return 0;
+    }
+
+    errno = EBADF;
+    return 0;
 }

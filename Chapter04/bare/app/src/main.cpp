@@ -1,8 +1,8 @@
 #include <cstdint>
 
 #include <hal.hpp>
-#include <uart_stm32.hpp>
 #include <stm32f072xb.h>
+#include <uart_stm32.hpp>
 
 int main()
 {

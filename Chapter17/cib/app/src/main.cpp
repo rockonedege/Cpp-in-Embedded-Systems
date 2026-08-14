@@ -16,82 +16,70 @@
 
 #include <cib/cib.hpp>
 
-struct runtime_init : public flow::service<> {};
-
-struct main_loop : public callback::service<> {};
-
-struct send_temperature : public callback::service<float> {};
-
-struct i2c {
-
-    constexpr static auto init = flow::action<"i2c_init">(
-        [](){
-            printf("I2C init ...\r\n");
-        });
-
-    constexpr static auto config = cib::config(
-        cib::extend<runtime_init>(*init)
-    );
-
+struct runtime_init : public flow::service<>
+{
 };
 
-struct temperature_sensor_component {
+struct main_loop : public callback::service<>
+{
+};
 
+struct send_temperature : public callback::service<float>
+{
+};
+
+struct i2c
+{
+    constexpr static auto init =
+        flow::action<"i2c_init">([]() { printf("I2C init ...\r\n"); });
+
+    constexpr static auto config =
+        cib::config(cib::extend<runtime_init>(*init));
+};
+
+struct temperature_sensor_component
+{
     constexpr static auto init = flow::action<"temp_sensor_init">(
-        []() {
-            printf("Initializing temperature sensor ... \r\n");
-        });
+        []() { printf("Initializing temperature sensor ... \r\n"); });
 
-    constexpr static auto read_temperature = []() {
+    constexpr static auto read_temperature = []()
+    {
         float temperature = 23.4f;
 
         cib::service<send_temperature>(temperature);
     };
 
-    constexpr static auto config = cib::config(
-        cib::extend<main_loop>(read_temperature),
+    constexpr static auto config =
+        cib::config(cib::extend<main_loop>(read_temperature),
 
-        cib::extend<runtime_init>(i2c::init >> *init)
-    );
-
+                    cib::extend<runtime_init>(i2c::init >> *init));
 };
 
-struct display_temperature_component {
+struct display_temperature_component
+{
+    constexpr static auto display_temperature = [](float temperature)
+    { printf("Temperature is %.2f C\r\n", temperature); };
 
-    constexpr static auto display_temperature = [](float temperature) {
-        printf("Temperature is %.2f C\r\n", temperature);
-    };
-
-    constexpr static auto config = cib::config(
-        cib::extend<send_temperature>(display_temperature)
-    );
-
+    constexpr static auto config =
+        cib::config(cib::extend<send_temperature>(display_temperature));
 };
 
-struct data_sender_component {
+struct data_sender_component
+{
+    constexpr static auto send_temp = [](float temp)
+    { printf("Sending temperature %.2f C\r\n", temp); };
 
-    constexpr static auto send_temp = [](float temp) {
-        printf("Sending temperature %.2f C\r\n", temp);
-    };
-
-    constexpr static auto config = cib::config(
-        cib::extend<send_temperature>(send_temp)
-    );
-
+    constexpr static auto config =
+        cib::config(cib::extend<send_temperature>(send_temp));
 };
 
-struct my_project {
-    
+struct my_project
+{
     constexpr static auto config = cib::config(
-        cib::exports<runtime_init,
-                    main_loop,
-                    send_temperature>,
-                        
-        cib::components<i2c,
-                        temperature_sensor_component,
-                        display_temperature_component,
-                        data_sender_component>
-    );
+        cib::exports<runtime_init, main_loop, send_temperature>,
+
+        cib::components<i2c, temperature_sensor_component,
+                        display_temperature_component, data_sender_component>);
 };
 
 int main()

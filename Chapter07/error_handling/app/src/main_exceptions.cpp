@@ -1,7 +1,7 @@
+#include <csignal>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
-#include <csignal>
 #include <exception>
 #include <stdexcept>
 
@@ -12,13 +12,15 @@
 
 #include <retarget.hpp>
 
-template <class T, std::size_t N> struct ring_buffer {
-  std::array<T, N> arr;
-  std::size_t write_idx = 0; 
+template <class T, std::size_t N> struct ring_buffer
+{
+    std::array<T, N> arr;
+    std::size_t write_idx = 0;
 
-  void push(T t) {
-    arr.at(write_idx++) = t;
-  }
+    void push(T t)
+    {
+        arr.at(write_idx++) = t;
+    }
 };
 
 int main()
@@ -32,38 +34,47 @@ int main()
 
     printf("Exceptions example\r\n");
 
-    std::set_terminate([]() {
-        printf("My terminate handler!\r\n");
-        while(true){}
-    });
+    std::set_terminate(
+        []()
+        {
+            printf("My terminate handler!\r\n");
+            while(true)
+            {
+            }
+        });
 
     std::array<int, 4> arr;
 
     // uncomment the following line to trigger terminate handler
     // arr.at(5) = 6;
 
-    try {
-      arr.at(5) = 6;
+    try
+    {
+        arr.at(5) = 6;
     }
-    catch(std::out_of_range &e) {
-      printf("Array out of range!\r\n");
+    catch(std::out_of_range &e)
+    {
+        printf("Array out of range!\r\n");
     }
-    catch (...) {
-      printf("Unexpected expection...\r\n");
+    catch(...)
+    {
+        printf("Unexpected expection...\r\n");
     }
 
     ring_buffer<int, 4> rb;
-    try {
-      for(int i = 0; i < 6; i++) {
-        rb.push(i);
-      }
+    try
+    {
+        for(int i = 0; i < 6; i++)
+        {
+            rb.push(i);
+        }
     }
-    catch(std::out_of_range &e) {
-      printf("Ring buffer out of range!\r\n");
-    } 
+    catch(std::out_of_range &e)
+    {
+        printf("Ring buffer out of range!\r\n");
+    }
 
     while(true)
     {
     }
 }
- 

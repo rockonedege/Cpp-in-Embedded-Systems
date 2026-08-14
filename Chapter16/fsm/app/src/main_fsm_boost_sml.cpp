@@ -17,36 +17,41 @@
 
 namespace sml = boost::sml;
 
-struct ble_button_pressed{};
-struct connection_request{};
-struct timer_expired{};
-
-constexpr auto start_advertising = [](){
-    printf("Action: start_advertising()\n");
+struct ble_button_pressed
+{
+};
+struct connection_request
+{
+};
+struct timer_expired
+{
 };
 
-constexpr auto stop_advertising = [](){
-    printf("Action: stop_advertising()\n");
-};
+constexpr auto start_advertising = []()
+{ printf("Action: start_advertising()\n"); };
 
-constexpr auto disconnect = [](){
-    printf("Action: disconnect()\n");
-};
+constexpr auto stop_advertising = []()
+{ printf("Action: stop_advertising()\n"); };
 
-struct ble_fsm {
-  auto operator()() const {
-    using namespace sml;
-    /**
-     * Initial state: *initial_state
-     * Transition DSL: src_state + event [ guard ] / action = dst_state
-     */
-    return make_transition_table(
-      *"idle"_s + event<ble_button_pressed>         / start_advertising = "advertising"_s,
-       "advertising"_s  + event<connection_request>                     = "connected"_s,
-       "advertising"_s  + event<timer_expired>      / stop_advertising  = "idle"_s,
-       "connected"_s + event<ble_button_pressed>    / disconnect        = "idle"_s
-    );
-  }
+constexpr auto disconnect = []() { printf("Action: disconnect()\n"); };
+
+struct ble_fsm
+{
+    auto operator()() const
+    {
+        using namespace sml;
+        /**
+         * Initial state: *initial_state
+         * Transition DSL: src_state + event [ guard ] / action = dst_state
+         */
+        return make_transition_table(
+            *"idle"_s + event<ble_button_pressed> / start_advertising =
+                "advertising"_s,
+            "advertising"_s + event<connection_request> = "connected"_s,
+            "advertising"_s + event<timer_expired> / stop_advertising =
+                "idle"_s,
+            "connected"_s + event<ble_button_pressed> / disconnect = "idle"_s);
+    }
 };
 
 int main()
@@ -60,19 +65,23 @@ int main()
 
     using namespace sml;
 
-    sm<ble_fsm> my_ble_fsm{}; 
+    sm<ble_fsm> my_ble_fsm{};
 
-    const auto print_current_state = [&]() {
+    const auto print_current_state = [&]()
+    {
         printf("Current State: ");
-        if(my_ble_fsm.is("idle"_s)) {
+        if(my_ble_fsm.is("idle"_s))
+        {
             printf("idle\n");
-        } 
-        if(my_ble_fsm.is("advertising"_s)) {
+        }
+        if(my_ble_fsm.is("advertising"_s))
+        {
             printf("advertising\n");
-        } 
-        if(my_ble_fsm.is("connected"_s)) {
+        }
+        if(my_ble_fsm.is("connected"_s))
+        {
             printf("connected\n");
-        } 
+        }
     };
 
     print_current_state();

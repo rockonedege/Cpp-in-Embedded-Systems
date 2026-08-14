@@ -32,7 +32,8 @@ int main()
     pq.push(10);
 
     printf("priority queue elements:\r\n");
-    while(!pq.empty()) {
+    while(!pq.empty())
+    {
         printf("top element: %d, size: %d\r\n", pq.top(), pq.size());
         pq.pop();
     }

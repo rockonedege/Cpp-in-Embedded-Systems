@@ -1,7 +1,6 @@
 #include <uart_stm32.hpp>
 
-hal::uart_stm32::uart_stm32(USART_TypeDef *inst)
-    : instance_(inst)
+hal::uart_stm32::uart_stm32(USART_TypeDef *inst) : instance_(inst)
 {
 }
 
@@ -22,10 +21,10 @@ void hal::uart_stm32::init(std::uint32_t baudrate)
     HAL_UART_Init(&huart_);
 }
 
-void hal::uart_stm32::write(std::span<const char> data) 
+void hal::uart_stm32::write(std::span<const char> data)
 {
     // we must cast away costness due to ST HAL's API
-    char * data_ptr = const_cast<char *>(data.data());
-    HAL_UART_Transmit(&huart_, reinterpret_cast<uint8_t *>(data_ptr), data.size(),
-                      HAL_MAX_DELAY);
+    char *data_ptr = const_cast<char *>(data.data());
+    HAL_UART_Transmit(&huart_, reinterpret_cast<uint8_t *>(data_ptr),
+                      data.size(), HAL_MAX_DELAY);
 }

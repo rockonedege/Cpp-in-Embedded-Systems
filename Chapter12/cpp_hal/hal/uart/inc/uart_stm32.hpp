@@ -6,8 +6,8 @@
 
 #include <uart.hpp>
 
-#include <stm32f0xx_hal.h>
 #include <stm32f072xb.h>
+#include <stm32f0xx_hal.h>
 
 namespace hal
 {

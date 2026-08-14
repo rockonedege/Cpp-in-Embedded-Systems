@@ -11,10 +11,10 @@ inline void init()
     HAL_Init();
 }
 
-inline std::uint32_t get_pc() 
+inline std::uint32_t get_pc()
 {
     std::uint32_t pc;
-    __asm volatile ("mov %0, pc" : "=r" (pc) );
+    __asm volatile("mov %0, pc" : "=r"(pc));
     return pc;
 }
 
@@ -25,7 +25,7 @@ struct time
         return HAL_GetTick();
     }
 
-    static void delay_ms(uint32_t delay) 
+    static void delay_ms(uint32_t delay)
     {
         HAL_Delay(delay);
     }

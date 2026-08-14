@@ -5,19 +5,20 @@
 #include <hal.hpp>
 #include <uart_stm32.hpp>
 
+class gsm_lib
+{
+  public:
+    gsm_lib(hal::uart &u) : uart_(u)
+    {
+    }
+    void init()
+    {
+        uart_.write("AT\r\n");
+    }
 
-
-class gsm_lib{
-    public:
-        gsm_lib(hal::uart &u) : uart_(u) {}
-        void init() {
-            uart_.write("AT\r\n");
-        }
-    private:
-        hal::uart &uart_;
-
+  private:
+    hal::uart &uart_;
 };
-
 
 int main()
 {
@@ -30,7 +31,7 @@ int main()
 
     gsm_lib gsm(uart);
     gsm.init();
-    
+
     while(true)
     {
     }
