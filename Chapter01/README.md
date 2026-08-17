@@ -1,4 +1,4 @@
-# Chapter01
+# Chapter 1: Debunking Common Myths about C++
 This folder contains examples in C and C++ from first chapter. 
 
 These are standalone examples that can be compiled by most compilers for x86_64 architecture. 
