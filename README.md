@@ -1,5 +1,11 @@
 # Cpp-in-Embedded-Systems
-C++ in Embedded Systems, published by Packt 
+
+This repository contains the code examples for **C++ in Embedded Systems: A Practical Transition from C to Modern C++**, published by Packt.
+
+The book is aimed at embedded developers moving from C to modern C++, with a practical focus on using C++ effectively in resource-constrained embedded systems.
+
+- [Packt](https://www.packtpub.com/en-us/product/c-in-embedded-systems-9781835881156)
+- [Amazon](https://www.amazon.com/dp/B0F2MWYLWW)
 
 ## Install and run docker image
 ### Pull the image
